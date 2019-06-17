@@ -1,21 +1,17 @@
+#include "ListNode.h"
+
+namespace ds {
 
 template <typename T>
 ListNode<T>::ListNode() 
-	: next(nullptr)
+	: next_(nullptr)
 {
-
+	data_ = T();
 }
 
 template <typename T>
 ListNode<T>::ListNode(const T& value)
-	: data(value), next(nullptr)
-{
-
-}
-
-template <typename T>
-ListNode<T>::ListNode(const ListNode& other) 
-	: data(other.data), next(other.next)
+	: data_(value), next_(nullptr)
 {
 
 }
@@ -23,5 +19,7 @@ ListNode<T>::ListNode(const ListNode& other)
 template <typename T>
 ListNode<T>::~ListNode()
 {
+
+}
 
 }
