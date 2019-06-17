@@ -20,4 +20,4 @@ nodetest.o : nodetest.cpp
 	$(CXX) $(CXXFLAGS) nodetest.cpp
 
 clean : 
-	rm -f *.o nodetest
+	rm -f *.o nodetest listtest

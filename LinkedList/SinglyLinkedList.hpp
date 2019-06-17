@@ -8,17 +8,21 @@ template <typename T>
 SinglyLinkedList<T>::SinglyLinkedList() 
 	: head_(nullptr), tail_(nullptr), size_(0)
 {
-
+	std::cout << "Constructor called" << std::endl;
 }
 
 template <typename T>
 SinglyLinkedList<T>::SinglyLinkedList(const SinglyLinkedList<T>& other)
+	: head_(nullptr), tail_(nullptr), size_(0)
 {
+	std::cout << "Copy constructor called" << std::endl;
 	_copy(other);
 }
+
 template <typename T>
 SinglyLinkedList<T>& SinglyLinkedList<T>::operator=(const SinglyLinkedList<T>& other)
 {
+	std::cout << "Operator equals called" << std::endl;
 	if (&other != this)
 	{
 		_destroy();
@@ -51,9 +55,12 @@ template <typename T>
 void SinglyLinkedList<T>::insertEnd(const T& value)
 {
 	ListNode<T>* newNode = new ListNode<T>(value);
-	ListNode<T>* temp = tail_;
-	temp->next_ = newNode;
-	tail_ = newNode;
+	if (tail_== nullptr) {
+		tail_ = newNode;
+	} else {
+		tail_->next_ = newNode;
+		tail_ = tail_->next_;
+	}
 	if (head_ == nullptr) {
 		head_ = newNode;
 	}
@@ -168,6 +175,10 @@ int SinglyLinkedList<T>::size() const
 template <typename T>
 void SinglyLinkedList<T>::_destroy()
 {
+	std::cout << "Destroy called" << std::endl;
+	if (head_ == nullptr) {
+		return;
+	}
 	_destroyHelper(head_);
 	size_ = 0;
 	head_ = nullptr;
@@ -177,6 +188,7 @@ void SinglyLinkedList<T>::_destroy()
 template <typename T>
 void SinglyLinkedList<T>::_destroyHelper(ListNode<T>* curr)
 {
+	std::cout << "Destroy helper called" << std::endl;
 	if (curr == nullptr) {
 		return;
 	}
@@ -187,7 +199,8 @@ void SinglyLinkedList<T>::_destroyHelper(ListNode<T>* curr)
 template <typename T>
 void SinglyLinkedList<T>::_copy(const SinglyLinkedList<T>& other)
 {
-	if (other.isEmpty()) {
+	std::cout << "Copy helper called" << std::endl;
+	if (other.head_ == nullptr) {
 		return;
 	}
 	ListNode<T>* ocurr = other.head_;
