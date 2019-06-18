@@ -7,10 +7,23 @@ using namespace ds;
 int main()
 {
 	SinglyLinkedList<int> test;
-	SinglyLinkedList<int> copytest(test);
-	SinglyLinkedList<int> operatortest;
-	operatortest = copytest;
+	test.insertFront(1);
+	test.insertFront(2);
+
+	// test.insertIdx(1, 100);
+	// test.print();
+	// test.insertIdx(2, 0);
+	// test.print();
+	// test.insertIdx(3, 2);
+	// test.print();
+	// test.insertIdx(4);
+	// test.print();
+	// test.insertIdx(5);
 	test.print();
-	operatortest.print();
+
+	
+	test.sort();
+	test.print();
+
 	return 0;
 }

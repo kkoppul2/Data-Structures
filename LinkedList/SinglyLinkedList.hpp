@@ -8,21 +8,19 @@ template <typename T>
 SinglyLinkedList<T>::SinglyLinkedList() 
 	: head_(nullptr), tail_(nullptr), size_(0)
 {
-	std::cout << "Constructor called" << std::endl;
+	//
 }
 
 template <typename T>
 SinglyLinkedList<T>::SinglyLinkedList(const SinglyLinkedList<T>& other)
 	: head_(nullptr), tail_(nullptr), size_(0)
 {
-	std::cout << "Copy constructor called" << std::endl;
 	_copy(other);
 }
 
 template <typename T>
 SinglyLinkedList<T>& SinglyLinkedList<T>::operator=(const SinglyLinkedList<T>& other)
 {
-	std::cout << "Operator equals called" << std::endl;
 	if (&other != this)
 	{
 		_destroy();
@@ -67,63 +65,149 @@ void SinglyLinkedList<T>::insertEnd(const T& value)
 	size_++;
 }
 
-/*
-template <typename T>
-void SinglyLinkedList<T>::insertIdx(const T& value)
-{
-
-}*/
-
-/*
 template <typename T>
 void SinglyLinkedList<T>::deleteFront()
 {
 	if (isEmpty()) {
-		std::cout << "Empty list, nothing to delete" << std::endl;
+		std::cout << "Invalid Delete: The list is already empty!" << std::endl;
 		return;
 	}
-	if (head_ == tail_){
-		delete head_;
-		head_ = nullptr;
+	ListNode<T>* temp = head_;
+	head_ = head_->next_;
+	if (head_ == nullptr) {
 		tail_ = nullptr;
 	}
-	
-}*/
+	delete temp;
+	size_--;
+}
 
-/*
 template <typename T>
 void SinglyLinkedList<T>::deleteEnd()
 {
-
-}
-
-template <typename T>
-void SinglyLinkedList<T>::deleteIdx(int idx)
-{
-
-}
-
-template <typename T>
-void SinglyLinkedList<T>::deleteNode(const ListNode* node)
-{
-
+	if (isEmpty()) {
+		std::cout << "Invalid Delete: The list is already empty!" << std::endl;
+		return;
+	}
+	ListNode<T>* curr = head_;
+	if (curr->next_ == nullptr) {
+		delete tail_;
+		head_ = nullptr;
+		tail_ = nullptr;
+	} else {
+		while (curr->next_ != tail_) {
+			curr = curr->next_;
+		}
+		curr->next_ = nullptr;
+		delete tail_;
+		tail_ = curr;
+	}
+	size_--;
 }
 
 template <typename T>
 void SinglyLinkedList<T>::sort()
 {
+	head_ = _sort(head_, size_);
+	ListNode<T>* curr = head_;
+	while (curr->next_ != nullptr) {
+		curr = curr->next_;
+	}
+	tail_ = curr;
+	
+}
 
+template <typename T>
+ListNode<T>* SinglyLinkedList<T>::_sort(ListNode<T>* front, unsigned size)
+{
+	if (front == nullptr || front->next_ == nullptr) {
+		return front;
+	}
+	ListNode<T>* back = front;
+	ListNode<T>* prev = nullptr;
+	for (unsigned i = 0; i < size/2; ++i) {
+		prev = back;
+		back = back->next_;
+	}
+	prev->next_ = nullptr;
+	front = _sort(front, size/2);
+	back = _sort(back, size-(size/2));
+	return _merge(front, back);
+}
+
+template <typename T>
+ListNode<T>* SinglyLinkedList<T>::_merge(ListNode<T>* front, ListNode<T>* back)
+{
+	ListNode<T>* head = nullptr;
+	if (front->data_ <= back->data_) {
+		head = front;
+		front = front->next_;
+	} else {
+		head = back;
+		back = back->next_;
+	}
+	ListNode<T>* next = head;
+	while (front != nullptr && back != nullptr) {
+		if (front->data_ <= back->data_) {
+			next->next_ = front;
+			front = front->next_;
+		} else {
+			next->next_ = back;
+			back = back->next_;
+		}
+		next = next->next_;
+	}
+	if (front == nullptr) {
+		next->next_ = back;
+	} else if (back == nullptr) {
+		next->next_ = front;
+	}
+
+	return head;
 }
 
 template <typename T>
 void SinglyLinkedList<T>::reverse()
 {
-
+	if (isEmpty() || head_ == tail_)
+	{
+		return;
+	}
+	ListNode<T>* prev = nullptr;
+	ListNode<T>* curr = head_;
+	ListNode<T>* next = curr->next_;
+	while (next != nullptr) {
+		curr->next_ = prev;
+		prev = curr;
+		curr = next;
+		next = curr->next_;
+	}
+	curr->next_ = prev;
+	curr = head_;
+	head_ = tail_;
+	tail_ = curr;
 }
-*/
 
 template <typename T>
-void SinglyLinkedList<T>::print()
+void SinglyLinkedList<T>::reverseRecursive()
+{
+	_reverseRecursive(head_, nullptr);
+	ListNode<T>* temp = head_;
+	head_ = tail_;
+	tail_ = temp;
+}
+
+template <typename T>
+void SinglyLinkedList<T>::_reverseRecursive(ListNode<T>* curr, ListNode<T>* prev)
+{
+	if (curr == nullptr) {
+		return;
+	}
+	_reverseRecursive(curr->next_, curr);
+	curr->next_ = prev;
+}
+
+template <typename T>
+void SinglyLinkedList<T>::print() const
 {
 	if (isEmpty()) {
 		std::cout << "The list is empty!" << std::endl;
@@ -139,7 +223,7 @@ void SinglyLinkedList<T>::print()
 }
 
 template <typename T>
-void SinglyLinkedList<T>::printReverse()
+void SinglyLinkedList<T>::printReverse() const
 {
 	if (isEmpty()) {
 		std::cout << "The list is empty!" << std::endl;
@@ -151,7 +235,7 @@ void SinglyLinkedList<T>::printReverse()
 }
 
 template <typename T>
-void SinglyLinkedList<T>::_printReverse(const ListNode<T>* curr)
+void SinglyLinkedList<T>::_printReverse(const ListNode<T>* curr) const
 {
 	if (curr == nullptr) {
 		return;
@@ -167,7 +251,7 @@ bool SinglyLinkedList<T>::isEmpty() const
 }
 
 template <typename T>
-int SinglyLinkedList<T>::size() const
+unsigned SinglyLinkedList<T>::size() const
 {
 	return size_;
 }
@@ -175,8 +259,7 @@ int SinglyLinkedList<T>::size() const
 template <typename T>
 void SinglyLinkedList<T>::_destroy()
 {
-	std::cout << "Destroy called" << std::endl;
-	if (head_ == nullptr) {
+	if (isEmpty()) {
 		return;
 	}
 	_destroyHelper(head_);
@@ -188,7 +271,6 @@ void SinglyLinkedList<T>::_destroy()
 template <typename T>
 void SinglyLinkedList<T>::_destroyHelper(ListNode<T>* curr)
 {
-	std::cout << "Destroy helper called" << std::endl;
 	if (curr == nullptr) {
 		return;
 	}
@@ -199,8 +281,7 @@ void SinglyLinkedList<T>::_destroyHelper(ListNode<T>* curr)
 template <typename T>
 void SinglyLinkedList<T>::_copy(const SinglyLinkedList<T>& other)
 {
-	std::cout << "Copy helper called" << std::endl;
-	if (other.head_ == nullptr) {
+	if (other.isEmpty()) {
 		return;
 	}
 	ListNode<T>* ocurr = other.head_;
@@ -213,6 +294,12 @@ void SinglyLinkedList<T>::_copy(const SinglyLinkedList<T>& other)
 	}
 	tail_ = curr;
 	size_ = other.size_;
+}
+
+template <typename T>
+void SinglyLinkedList<T>::partition(const T& value) 
+{
+	
 }
 
 }
