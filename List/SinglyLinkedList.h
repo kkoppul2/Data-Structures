@@ -40,7 +40,6 @@ class SinglyLinkedList {
 
   //  CTCI Algorithms
   void Partition(const T& pivot);
-  void PartitionRecursive(const T& pivot);
 
  private:
   //  Aspects of Structure
@@ -49,12 +48,6 @@ class SinglyLinkedList {
   //  Private helper functions
   ListNode* SortHelper(ListNode* curr, unsigned size);
   ListNode* MergeHelper(ListNode* front, ListNode* back);
-
-  ListNode* PartitionRecursiveHelper(ListNode* front, unsigned size,
-                                    const T& pivot);
-  ListNode* PartitionMergeHelper(ListNode* list1, ListNode* list2,
-                                const T& pivot);
-
   void ReverseRecursiveHelper(ListNode* curr, ListNode* prev);
   void PrintReverseHelper(const ListNode* curr) const;
   void Destroy();
